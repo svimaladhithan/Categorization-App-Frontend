@@ -1,7 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { Button, Pagination } from 'flowbite-react';
+import { Button, Checkbox, Pagination } from 'flowbite-react';
+import { fetchCategories, fetchSelectedCategories, updateSelectedCategories } from '../services/categoryApi';
+import { toast } from 'react-toastify';
+import Toast from "../components/Toast";
 
 type Category = {
   _id: string;
@@ -16,23 +18,37 @@ const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/categories?page=${currentPage}`);
-        setCategories(response.data.categories);
-        setTotalPages(response.data.totalPages);
+        const { categories, totalPages } = await fetchCategories(currentPage);
+        setCategories(categories);
+        setTotalPages(totalPages);
       } catch (error) {
         console.error('Error fetching categories:', error);
+        toast.error("Error fetching categories. Please try again.");
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, [currentPage]);
 
   useEffect(() => {
-    const savedCategories = JSON.parse(localStorage.getItem('selectedCategories') || '[]');
-    setSelectedCategories(new Set(savedCategories));
-  }, []);
+    const fetchData = async () => {
+      const userId = auth?.user?.userId;
+
+      if (userId) {
+        try {
+          const savedCategories = await fetchSelectedCategories(userId);
+          setSelectedCategories(new Set(savedCategories));
+        } catch (error) {
+          console.error('Error fetching selected categories:', error);
+          toast.error("Error fetching categories. Please try again.");
+        }
+      }
+    };
+
+    fetchData();
+  }, [auth?.user?.userId]);
 
   const handleSelectCategory = (categoryId: string) => {
     setSelectedCategories((prevSelected) => {
@@ -42,44 +58,53 @@ const Categories = () => {
       } else {
         newSelected.add(categoryId);
       }
-      localStorage.setItem('selectedCategories', JSON.stringify(Array.from(newSelected)));
       return newSelected;
     });
   };
 
   const handleSubmit = async () => {
     const categoryIds = Array.from(selectedCategories);
-    const userId = auth;
-    console.log("vimal",userId)
+    const userId = auth?.user?.userId;
+
+    if (!userId) {
+      toast.error("User is not logged in.");
+      return;
+    }
+
     try {
-      await axios.post('http://127.0.0.1:5000/api/categories/select', { userId, categoryIds });
-      alert('Categories updated successfully!');
+      await updateSelectedCategories(userId, categoryIds);
+      toast.success("Categories updated successfully");
     } catch (error) {
       console.error('Error updating categories:', error);
+      toast.error("Error updating categories. Please try again.");
     }
   };
 
   const handleLogout = () => {
-    auth?.logout(); 
-    localStorage.removeItem('Token'); 
+    auth?.logout();
+    localStorage.removeItem('Token');
   };
-
-  return (
+return (
     <div className="container mx-auto my-4 max-w-lg w-full px-4 sm:px-6 md:px-8 border-2 p-6 md:p-10 rounded-xl">
+      <Toast />
       <h1 className="text-xl sm:text-2xl text-center font-bold mb-4">Please mark your interests!</h1>
+      <p className="text-center text-sm mt-6">
+        We will keep you notified.
+      </p>
       <hr />
       <div className="flex flex-col ml-2 md:ml-4 items-start mt-3 space-y-2">
+      <p className="text-center text-lg mt-4 mb-2">
+        My saved interests!
+      </p>
         {categories.map((category) => (
           <div key={category._id} className="flex items-center">
-            <input
-              type="checkbox"
+             <Checkbox
               id={category._id}
-              value={category._id}
               checked={selectedCategories.has(category._id)}
               onChange={() => handleSelectCategory(category._id)}
               className="mr-2"
             />
-            <label htmlFor={category._id} className="text-base sm:text-lg">{category.name}</label>
+            <label htmlFor={category._id} className="text-base sm:text-md">{category.name}</label>
           </div>
         ))}
       </div>

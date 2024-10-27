@@ -1,29 +1,33 @@
 import { useState } from "react";
-import axios from "axios";
 import { OtpInput } from 'reactjs-otp-input';
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { verifyCode } from "../services/authApi";
+import { toast } from 'react-toastify';
+import Toast from "../components/Toast";
 
 function OtpVerification({ email }: { email: string }) {
     const [code, setCode] = useState("");
     const [isVerified, setIsVerified] = useState(false);
     const navigate = useNavigate();
 
-    const handleVerify = async (code) => {
+    const handleVerify = async (code: string) => {
         try {
-            const response = await axios.post("http://127.0.0.1:5000/api/auth/verify", { email, code });
+            const response = await verifyCode(email, code);
             if (response.status === 200) {
                 setIsVerified(true);
             } else {
-                alert("Invalid verification code.");
+                toast.error("Please enter a valid verification code");
             }
         } catch (error) {
             console.error("Error verifying code:", error);
+            toast.error("Please enter a valid verification code");
         }
     };
 
     return (
         <div className="min-h-screen mt-20">
+            <Toast />
             <div className="flex items-center justify-center mx-auto flex-col md:flex-row md:items-center max-w-xl w-auto p-6 rounded-lg shadow-md overflow-hidden">
 
                 {isVerified ? (
@@ -33,7 +37,7 @@ function OtpVerification({ email }: { email: string }) {
                             onClick={() => navigate("/login")}
                             className="w-1/2 bg-gradient-to-r from-cyan-500 to-blue-500"
                         >
-                            Login
+                            LOGIN
                         </Button>
                     </div>
                 ) : (
@@ -65,17 +69,16 @@ function OtpVerification({ email }: { email: string }) {
                             />
                         </div>
                         <Button
-                            onClick={()=>{handleVerify(code)}}
+                            onClick={() => handleVerify(code)}
                             disabled={code.length !== 8}
-                            className="w-1/2  bg-gradient-to-r from-cyan-500 to-blue-500"
+                            className="w-1/2 bg-gradient-to-r from-cyan-500 to-blue-500"
                         >
-                            Verify
+                            VERIFY
                         </Button>
                     </div>
                 )}
             </div>
         </div>
-
     );
 }
 
