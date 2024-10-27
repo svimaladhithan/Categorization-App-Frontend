@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const Categories = () => {
+  const auth = useContext(AuthContext);
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -22,7 +24,6 @@ const Categories = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    // Load selected categories from localStorage
     const savedCategories = JSON.parse(localStorage.getItem('selectedCategories') || '[]');
     setSelectedCategories(new Set(savedCategories));
   }, []);
@@ -35,7 +36,6 @@ const Categories = () => {
       } else {
         newSelected.add(categoryId);
       }
-      // Save to localStorage
       localStorage.setItem('selectedCategories', JSON.stringify(Array.from(newSelected)));
       return newSelected;
     });
@@ -43,8 +43,10 @@ const Categories = () => {
 
   const handleSubmit = async () => {
     const categoryIds = Array.from(selectedCategories);
+    const userId = auth.user; 
+
     try {
-      await axios.post('http://127.0.0.1:5000/api/categories/select', { userId: 'YOUR_USER_ID', categoryIds });
+      await axios.post('http://127.0.0.1:5000/api/categories/select', { userId, categoryIds });
       alert('Categories updated successfully!');
     } catch (error) {
       console.error('Error updating categories:', error);
@@ -145,7 +147,7 @@ const Categories = () => {
         ))}
       </div>
       {renderPagination()}
-      <button onClick={handleSubmit} className="flex mx-auto mt-4">
+      <button onClick={handleSubmit} className="flex mx-auto mt-4 bg-blue-500 text-white px-4 py-2 rounded">
         Submit Selection
       </button>
     </div>

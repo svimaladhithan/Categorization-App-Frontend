@@ -68,12 +68,12 @@ return (
           <div className="flex-1">
             <div className="font-bold dark:text-white text-4xl">
               <span className="px-2 py-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg text-white">
-                Inventory
+                Classify
               </span>
-              Stop
+              Me!
             </div>
             <p className="text-sm mt-6">
-              You can sign up with your Email and password or you can use Google.
+              You can sign up with your Email and password.
             </p>
           </div>
           <div className="flex-1">

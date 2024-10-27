@@ -10,10 +10,10 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<string | null>(localStorage.getItem('user'));
-
+    
     const login = (username: string) => {
         setUser(username);
-        localStorage.setItem('user', username); // Persist user session
+        localStorage.setItem('user', username); 
     };
 
     const logout = () => {
