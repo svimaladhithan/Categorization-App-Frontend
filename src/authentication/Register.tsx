@@ -18,6 +18,7 @@ const Register = () => {
   const auth = useContext(AuthContext);
   const [showVerification, setShowVerification] = useState(false);
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const initialValues: SignupValues = {
     username: "",
@@ -50,12 +51,11 @@ const Register = () => {
         auth?.login(values.username);
         setEmail(values.email);
         setShowVerification(true);
-      } else {
-        throw new Error(response.data.message || "Signup failed");
-      }
+      } 
     } catch (error) {
-      console.error("Signup error:", error);
-    } finally {
+      const message = error.response?.data?.message || "Signup failed. Please try again.";
+      setErrorMessage(message);
+        } finally {
       setSubmitting(false);
     }
   };
@@ -64,6 +64,7 @@ return (
         <OtpVerification email={email} />
     ) : (
       <div className="min-h-screen mt-20">
+        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
         <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
           <div className="flex-1">
             <div className="font-bold dark:text-white text-4xl">
@@ -128,7 +129,7 @@ return (
             </Formik>
             <div className="flex gap-2 text-sm mt-6">
               <span>Already Have An Account?</span>
-              <Link to="/signin" className="text-blue-500">
+              <Link to="/login" className="text-blue-500">
                 Sign In
               </Link>
             </div>

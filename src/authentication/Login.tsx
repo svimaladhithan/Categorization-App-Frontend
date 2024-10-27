@@ -48,7 +48,7 @@ const Login = () => {
         setErrorMessage(response.data.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      setErrorMessage(error.response?.data.message || "An error occurred during login.");
+      setErrorMessage(error.response?.data.message || "Invalid Creditionals.");
     } finally {
       setLoading(false);
       setSubmitting(false);
