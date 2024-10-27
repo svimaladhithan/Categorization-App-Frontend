@@ -16,8 +16,9 @@ interface LoginValues {
 const Login = () => {
   const auth = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const navigate= useNavigate()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+  
   const initialValues: LoginValues = {
     email: "",
     password: "",
@@ -37,12 +38,12 @@ const Login = () => {
     setLoading(true);
     setErrorMessage(null);
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/auth/login-user", values); // Same endpoint for login
+      const response = await axios.post("http://127.0.0.1:5000/api/auth/login-user", values);
 
-      if (response.status===200) {
+      if (response.status === 200) {
         localStorage.setItem("Token", response.data.token);
         auth?.login(values.email); 
-        navigate('/categories')
+        navigate('/categories');
       } else {
         setErrorMessage(response.data.message || "Login failed. Please try again.");
       }
@@ -53,7 +54,8 @@ const Login = () => {
       setSubmitting(false);
     }
   };
-return (
+
+  return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">

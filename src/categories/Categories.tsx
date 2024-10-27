@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Categories = () => {
@@ -21,6 +21,12 @@ const Categories = () => {
     fetchCategories();
   }, [currentPage]);
 
+  useEffect(() => {
+    // Load selected categories from localStorage
+    const savedCategories = JSON.parse(localStorage.getItem('selectedCategories') || '[]');
+    setSelectedCategories(new Set(savedCategories));
+  }, []);
+
   const handleSelectCategory = (categoryId) => {
     setSelectedCategories((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -29,6 +35,8 @@ const Categories = () => {
       } else {
         newSelected.add(categoryId);
       }
+      // Save to localStorage
+      localStorage.setItem('selectedCategories', JSON.stringify(Array.from(newSelected)));
       return newSelected;
     });
   };
