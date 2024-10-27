@@ -5,6 +5,7 @@ import Categories from "./categories/Categories";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import { AuthProvider } from "./context/AuthContext";
+import PageNotFound from "./authentication/PageNotFound";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/categories" element={<ProtectedRoute element={<Categories />} />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
       </div>
