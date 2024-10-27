@@ -16,24 +16,24 @@
 ### UI Design and Component Implementation
 
 - Developed the user interface according to the specified requirements.
-- Integrated the **Flowbite** design component library for pagination, loaders and other design components.
+- Integrated the **Flowbite** design component library for **pagination**, **loaders** and other design components.
 - Created the following screens:
 
   **Register Screen**  
-  - Displays the fields to register a new user.
-  - Implemented Formik error validation for real-time error validation on each input field, improving user input accuracy.
-  - Displays a button to navigate to the LOGIN screen for existing users.
+  - Displays the fields to **Register** a new user.
+  - Implemented **Formik** error validation for real-time error validation on each input field, improving user input accuracy.
+  - Displays a button to navigate to the **LOGIN** screen for existing users.
   - On successful registration, a verification email containing a unique **code** is sent to the user for account verification.
     
   **OTP Verification Screen**  
   - On successful registration, user is redirected to the OTP Verification screen.
-  - Display the OTP input field.
+  - Display the **OTP input field**.
   - Entering the valid code received in the mail will register the user successfully.
 
   **Login Screen**  
-  - After OTP verification, user is navigated to the LOGIN screen.
-  - Displays the Email and Password fields.
-  - Implemented Formik error validation for real-time error validation on each input field, improving user input accuracy.
+  - After OTP verification, user is navigated to the **LOGIN** screen.
+  - Displays the **Email** and **Password** fields.
+  - Implemented **Formik** error validation for real-time error validation on each input field, improving user input accuracy.
 
   **Categories Screen**  
   - Displays the **list of categories** fetched from the backend.
@@ -42,10 +42,10 @@
   - Includes a **Submit** button to save the latest category selections to the database, as well as a **Logout** button to logout the user.
 
 **Header**  
-  - Implemented a static header which will be displayed across all the screens.
+  - Implemented a **static header** which will be displayed across all the screens.
     
 **Toast Notifications**  
-  - Implemented toast messages for every action performed to provide proper user feedback.
+  - Implemented **toast** messages for every action performed to provide proper user feedback.
 
 - Developed common components for **Text Input**, **Header**, and **Toast** to promote code reusability and maintainability.
 - Ensured the interface is responsive and user-friendly, maintaining high code quality and readability.
